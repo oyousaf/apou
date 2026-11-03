@@ -1,0 +1,106 @@
+---
+import { Font, getImage } from "astro:assets";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/site";
+import { photos } from "../data/photos";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: ImageMetadata;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description = site.description, image = photos.hero.src, noindex = false, jsonLd = [] } = Astro.props;
+
+const fullTitle = title ? `${title} | ${site.name} Photography, Ossett` : `${site.name} | Wedding & Portrait Photographer in Ossett`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const og = await getImage({ src: image, width: 1200, height: 630, fit: "cover", format: "jpg", quality: 80 });
+const ogUrl = new URL(og.src, Astro.site).href;
+
+const business = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `${Astro.site}#business`,
+  name: site.legalName,
+  alternateName: site.name,
+  description: site.description,
+  url: Astro.site?.href,
+  image: ogUrl,
+  logo: new URL("/icon-512.png", Astro.site).href,
+  telephone: site.phoneE164,
+  email: site.email,
+  founder: { "@type": "Person", name: site.photographer, jobTitle: "Photographer" },
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.address.street,
+    addressLocality: site.address.locality,
+    addressRegion: site.address.region,
+    postalCode: site.address.postcode || undefined,
+    addressCountry: site.address.country,
+  },
+  geo: { "@type": "GeoCoordinates", latitude: site.geo.lat, longitude: site.geo.lng },
+  areaServed: site.areaServed.map((name) => ({ "@type": "Place", name })),
+  priceRange: "££",
+  sameAs: [site.links.shop],
+};
+
+const graph = [business, ...jsonLd];
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <meta name="theme-color" content="#f7f3ec" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171316" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:site_name" content={`${site.name} Photography`} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--font-fraunces" preload={[{ weight: "400", style: "normal" }, { weight: "300", style: "italic" }]} />
+    <Font cssVariable="--font-instrument" preload />
+
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+  </head>
+  <body class="flex min-h-dvh flex-col antialiased">
+    <a
+      href="#main"
+      class="sr-only z-50 rounded-sm bg-plum px-4 py-3 font-semibold text-on-plum focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+      >Skip to content</a
+    >
+    <Header />
+    <main id="main" class="grow" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <Analytics />
+    <SpeedInsights />
+    <script>
+      import "../scripts/motion";
+    </script>
+  </body>
+</html>

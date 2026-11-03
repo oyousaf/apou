@@ -1,0 +1,72 @@
+[
+  {
+    "id": "wedding-essentials",
+    "service": "weddings",
+    "name": "Essentials",
+    "price": 650,
+    "summary": "Natural, unobtrusive coverage of your day with every edited image delivered digitally.",
+    "includes": ["Professionally edited images", "USB or online download"],
+    "order": 1
+  },
+  {
+    "id": "wedding-signature",
+    "service": "weddings",
+    "name": "Signature",
+    "price": 1200,
+    "summary": "A bespoke photographic collection shaped around your day, finished with a printed album.",
+    "includes": [
+      "Bespoke coverage planned with you",
+      "Professionally edited images",
+      "USB or online download",
+      "Printed wedding album"
+    ],
+    "extras": ["Ask about seasonal offers"],
+    "featured": true,
+    "order": 2
+  },
+  {
+    "id": "portrait-session",
+    "service": "portraits",
+    "name": "Portrait session",
+    "price": 240,
+    "from": true,
+    "summary": "Relaxed portraits for individuals, couples and families, in the studio or on location.",
+    "includes": ["Unhurried session", "Edited digital images"],
+    "order": 1
+  },
+  {
+    "id": "newborn-session",
+    "service": "portraits",
+    "name": "Newborn session",
+    "price": 299,
+    "from": true,
+    "summary": "Gentle, baby-led newborn portraits with time built in for feeds and cuddles.",
+    "includes": ["Baby-led session", "Edited digital images"],
+    "featured": true,
+    "order": 2
+  },
+  {
+    "id": "session-small",
+    "service": "sessions",
+    "name": "Something Small",
+    "price": 50,
+    "summary": "A quick, friendly mini session that's great for groups.",
+    "includes": ["Up to 10 people", "5 digitally edited photos"],
+    "order": 1
+  },
+  {
+    "id": "session-newmillerdam",
+    "service": "sessions",
+    "name": "Newmillerdam",
+    "price": 85,
+    "summary": "Natural-light lakeside portraits at Newmillerdam Country Park, on limited one-off dates.",
+    "includes": [
+      "At least 5 digitally edited photos",
+      "3 printed and mounted 6×4 photographs",
+      "Luxury presentation box"
+    ],
+    "extras": ["All images on USB, add £60"],
+    "featured": true,
+    "order": 2
+  }
+]

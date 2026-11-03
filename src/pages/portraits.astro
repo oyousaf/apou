@@ -1,0 +1,47 @@
+---
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Gallery from "../components/Gallery.astro";
+import Packages from "../components/Packages.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { photos, portraitGallery } from "../data/photos";
+
+const kinds = [
+  { title: "Newborn", text: "Baby-led sessions in the first weeks, with time for feeds, settling and cuddles." },
+  { title: "Family", text: "Everyone together, from toddlers to grandparents, with plenty of room to play." },
+  { title: "Couples & individuals", text: "Engagements, milestones, or simply portraits you'll actually like of yourself." },
+];
+---
+
+<Base
+  title="Portrait & Newborn Photography"
+  description="Relaxed family, couple and newborn portrait photography in Ossett, West Yorkshire. Portrait sessions from £240, newborn sessions from £299."
+  image={photos.newborn.src}
+>
+  <PageIntro eyebrow="Portraits & Newborn" title="Portraits that feel like you" photo={photos.newborn}>
+    <p>
+      Whether it's a brand-new arrival, the whole family together or a portrait just for you, sessions are relaxed and
+      guided, so you can enjoy the moment and leave the rest to Graham.
+    </p>
+  </PageIntro>
+
+  <section aria-label="Portrait sessions" class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+    <ul class="grid gap-8 md:grid-cols-3" data-stagger>
+      {
+        kinds.map(({ title, text }) => (
+          <li class="border-t border-line pt-6">
+            <h2 class="text-2xl">{title}</h2>
+            <p class="mt-2 text-muted">{text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <Gallery photos={portraitGallery} label="Portrait gallery" />
+  </div>
+
+  <Packages service="portraits" />
+  <CtaBand title="Book a portrait session" />
+</Base>

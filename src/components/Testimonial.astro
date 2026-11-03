@@ -1,0 +1,19 @@
+---
+import { getCollection } from "astro:content";
+
+const [testimonial] = await getCollection("testimonials");
+const { quote, name, context } = testimonial.data;
+---
+
+<section aria-label="What clients say" class="bg-blush/60">
+  <figure class="reveal mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 lg:px-8">
+    <span aria-hidden="true" class="block font-display text-7xl leading-none text-plum">“</span>
+    <blockquote class="mt-2 font-display text-2xl leading-snug text-balance sm:text-3xl">
+      <p>{quote}</p>
+    </blockquote>
+    <figcaption class="mt-8 text-sm">
+      <span class="font-semibold">{name}</span>
+      {context && <span class="text-muted">, {context}</span>}
+    </figcaption>
+  </figure>
+</section>

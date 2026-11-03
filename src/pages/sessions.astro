@@ -1,0 +1,43 @@
+---
+import { MapPin, CalendarDays } from "@lucide/astro";
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Packages from "../components/Packages.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { photos } from "../data/photos";
+---
+
+<Base
+  title="APY Sessions at Newmillerdam"
+  description="Limited one-off outdoor photo sessions at Newmillerdam Country Park, Wakefield. Natural light, real moments, from £50."
+  image={photos.woodsAutumn.src}
+>
+  <PageIntro eyebrow="APY Sessions" title="Natural light. Real moments." photo={photos.woodsAutumn}>
+    <p>
+      APY Sessions are one-off days at favourite local spots, with a limited number of slots. Book online or directly
+      with Graham. The first is at Newmillerdam, with more one-off days planned through the year.
+    </p>
+  </PageIntro>
+
+  <section aria-label="Session details" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid gap-6 rounded-sm border border-line bg-surface p-8 sm:grid-cols-2">
+      <div class="flex gap-4">
+        <MapPin size={22} class="mt-1 shrink-0 text-plum" aria-hidden="true" />
+        <dl>
+          <dt class="font-semibold">Location</dt>
+          <dd class="text-muted">Newmillerdam Country Park, Wakefield</dd>
+        </dl>
+      </div>
+      <div class="flex gap-4">
+        <CalendarDays size={22} class="mt-1 shrink-0 text-plum" aria-hidden="true" />
+        <dl>
+          <dt class="font-semibold">Next date</dt>
+          <dd class="text-muted">New dates coming soon. Enquire to be first to hear.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <Packages service="sessions" heading="Session options" />
+  <CtaBand title="Reserve a slot" />
+</Base>

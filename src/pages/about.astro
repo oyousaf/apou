@@ -1,0 +1,44 @@
+---
+import Base from "../layouts/Base.astro";
+import PageIntro from "../components/PageIntro.astro";
+import Testimonial from "../components/Testimonial.astro";
+import CtaBand from "../components/CtaBand.astro";
+import { photos } from "../data/photos";
+---
+
+<Base
+  title="About Graham Gibson"
+  description="Meet Graham Gibson, the photographer behind A Picture of You in Ossett, West Yorkshire."
+  image={photos.portraitOutdoor.src}
+  jsonLd={[
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      name: "About Graham Gibson",
+      about: { "@id": "https://apou.legxcysol.dev/#business" },
+    },
+  ]}
+>
+  <!-- TODO(graham): replace with a portrait of Graham -->
+  <PageIntro eyebrow="About" title="Hi, I'm Graham" photo={photos.portraitOutdoor}>
+    <p>The photographer behind A Picture of You.</p>
+  </PageIntro>
+
+  <section class="mx-auto max-w-3xl px-4 pb-16 sm:px-6 lg:px-8">
+    <div class="prose-apy text-lg leading-relaxed">
+      <p>
+        Over the last few years I've learnt that successful photography takes so much more than good technical knowledge.
+        I build trust quickly with every client, in every situation, so I can portray you as naturally and authentically as
+        possible.
+      </p>
+      <p>
+        I can never quite decide whether I'm an energetic person or a calm one. Either way, I'm capturing moments that echo
+        a point in time: images that keep memories and feelings fresh for generations to come.
+      </p>
+      <p class="font-display text-2xl text-plum">That's what A Picture of You is all about.</p>
+    </div>
+  </section>
+
+  <Testimonial />
+  <CtaBand />
+</Base>

@@ -1,0 +1,123 @@
+---
+import { Image, getImage } from "astro:assets";
+import type { Photo } from "../data/photos";
+
+interface Props {
+  photos: Photo[];
+  label: string;
+}
+
+const { photos, label } = Astro.props;
+const id = `lb-${label.toLowerCase().replace(/\W+/g, "-")}`;
+
+const items = await Promise.all(
+  photos.map(async (photo) => {
+    const large = await getImage({ src: photo.src, width: 2000, format: "webp", quality: 82 });
+    return { ...photo, large: large.src };
+  }),
+);
+---
+
+<section aria-label={label}>
+  <ul class="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4" data-stagger>
+    {
+      items.map((photo, i) => (
+        <li class="break-inside-avoid">
+          <a
+            href={photo.large}
+            class="group relative block overflow-hidden rounded-sm bg-blush"
+            data-lightbox={id}
+            data-index={i}
+            data-alt={photo.alt}
+          >
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              widths={[400, 640, 960, 1280]}
+              quality={70}
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              class="w-full transition-transform duration-700 ease-(--ease-out-soft) group-hover:scale-103"
+            />
+            <span class="sr-only">View larger</span>
+            {import.meta.env.DEV && photo.temp && (
+              <span class="absolute top-2 left-2 rounded-full bg-ink/70 px-2 py-0.5 text-xs text-paper">temp</span>
+            )}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog id={id} class="lightbox m-auto max-h-none max-w-none bg-transparent p-0 backdrop:bg-black/90" aria-label={`${label}, enlarged`}>
+    <figure class="flex h-dvh w-screen flex-col items-center justify-center gap-3 p-4 sm:p-10">
+      <img alt="" class="max-h-[85dvh] w-auto max-w-full object-contain" data-lb-img />
+      <figcaption class="max-w-2xl text-center text-sm text-white/80" data-lb-caption></figcaption>
+    </figure>
+    <div class="fixed inset-x-0 top-0 flex justify-end p-3">
+      <button type="button" class="lb-btn" data-lb-close aria-label="Close">✕</button>
+    </div>
+    <div class="fixed inset-x-0 bottom-0 flex justify-center gap-3 p-4 sm:inset-y-0 sm:items-center sm:justify-between">
+      <button type="button" class="lb-btn" data-lb-prev aria-label="Previous photo">‹</button>
+      <button type="button" class="lb-btn" data-lb-next aria-label="Next photo">›</button>
+    </div>
+  </dialog>
+</section>
+
+<style>
+  @reference "../styles/global.css";
+
+  .lb-btn {
+    @apply inline-flex size-12 items-center justify-center rounded-full bg-white/10 text-2xl text-white backdrop-blur-sm transition-colors hover:bg-white/25;
+  }
+  .lightbox[open] {
+    animation: lb-in 220ms var(--ease-out-soft);
+  }
+  @keyframes lb-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox[open] {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  // Progressive enhancement: links open the full image without JS; with JS they open a modal viewer.
+  for (const dialog of document.querySelectorAll<HTMLDialogElement>("dialog.lightbox")) {
+    const links = [...document.querySelectorAll<HTMLAnchorElement>(`[data-lightbox="${dialog.id}"]`)];
+    const img = dialog.querySelector<HTMLImageElement>("[data-lb-img]")!;
+    const caption = dialog.querySelector<HTMLElement>("[data-lb-caption]")!;
+    let index = 0;
+
+    const show = (i: number) => {
+      index = (i + links.length) % links.length;
+      const link = links[index];
+      img.src = link.href;
+      img.alt = link.dataset.alt ?? "";
+      caption.textContent = `${link.dataset.alt ?? ""} (${index + 1} of ${links.length})`;
+    };
+
+    links.forEach((link, i) =>
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        show(i);
+        dialog.showModal();
+      }),
+    );
+
+    dialog.querySelector("[data-lb-prev]")!.addEventListener("click", () => show(index - 1));
+    dialog.querySelector("[data-lb-next]")!.addEventListener("click", () => show(index + 1));
+    dialog.querySelector("[data-lb-close]")!.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog || (event.target as HTMLElement).tagName === "FIGURE") dialog.close();
+    });
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") show(index - 1);
+      if (event.key === "ArrowRight") show(index + 1);
+    });
+    dialog.addEventListener("close", () => links[index]?.focus());
+  }
+</script>

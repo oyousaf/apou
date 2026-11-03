@@ -1,0 +1,63 @@
+---
+import { getCollection } from "astro:content";
+import { Check } from "@lucide/astro";
+
+interface Props {
+  service: "weddings" | "portraits" | "sessions";
+  heading?: string;
+}
+
+const { service, heading = "Collections & pricing" } = Astro.props;
+const packages = (await getCollection("packages", ({ data }) => data.service === service)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const gbp = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", maximumFractionDigits: 0 });
+const headingId = `${service}-pricing`;
+---
+
+<section aria-labelledby={headingId} class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+  <h2 id={headingId} class="text-4xl sm:text-5xl">{heading}</h2>
+  <ul class="mt-10 grid gap-6 md:grid-cols-2" data-stagger>
+    {
+      packages.map(({ data }) => (
+        <li
+          class:list={[
+            "flex flex-col rounded-sm border p-8",
+            data.featured ? "border-plum bg-surface shadow-xs" : "border-line bg-surface/60",
+          ]}
+        >
+          <div class="flex items-baseline justify-between gap-4">
+            <h3 class="text-2xl">{data.name}</h3>
+            {data.featured && <span class="eyebrow">Recommended</span>}
+          </div>
+          <p class="mt-4 font-display text-5xl text-plum">
+            {data.from && <span class="mr-1 font-sans text-base text-muted">from</span>}
+            {gbp.format(data.price)}
+          </p>
+          <p class="mt-4 text-muted">{data.summary}</p>
+          <ul class="mt-6 space-y-2.5">
+            {data.includes.map((item) => (
+              <li class="flex gap-3">
+                <Check size={18} class="mt-0.5 shrink-0 text-plum" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          {data.extras.length > 0 && (
+            <ul class="mt-4 space-y-1 text-sm text-muted">
+              {data.extras.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          )}
+          <a
+            href={`/contact?enquiry=${encodeURIComponent(data.name)}`}
+            class="mt-8 inline-flex self-start rounded-full border border-plum px-5 py-2.5 text-sm font-semibold text-plum transition-colors hover:bg-plum hover:text-on-plum"
+          >
+            Enquire about {data.name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>

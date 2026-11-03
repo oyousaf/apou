@@ -1,0 +1,14 @@
+{
+  "name": "A Picture of You Photography",
+  "short_name": "A Picture of You",
+  "description": "Wedding, portrait and newborn photography in Ossett, West Yorkshire.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#f7f3ec",
+  "theme_color": "#7a3f6e",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
