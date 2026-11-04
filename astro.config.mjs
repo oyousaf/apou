@@ -9,6 +9,7 @@ export default defineConfig({
   trailingSlash: "never",
   adapter: vercel({ imageService: false }),
   integrations: [sitemap()],
+  markdown: { syntaxHighlight: false },
   vite: { plugins: [tailwindcss()] },
 
   fonts: [
